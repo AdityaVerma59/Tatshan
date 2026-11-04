@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 520" role="img" aria-label="A pigeon carrying an envelope">
+  <defs>
+    <linearGradient id="body" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#fffdf8"/>
+      <stop offset="1" stop-color="#f1e2cb"/>
+    </linearGradient>
+    <linearGradient id="wingNear" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#f6e9d5"/>
+      <stop offset="1" stop-color="#fffdf9"/>
+    </linearGradient>
+    <linearGradient id="wingFar" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#e6d2b6"/>
+      <stop offset="1" stop-color="#f3e5cf"/>
+    </linearGradient>
+    <linearGradient id="kraft" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e9c99d"/>
+      <stop offset="1" stop-color="#d7b080"/>
+    </linearGradient>
+    <path id="leaf" d="M0 0 C 15 -30 17 -120 0 -180 C -17 -120 -15 -30 0 0 Z"/>
+  </defs>
+
+  <!-- far wing (behind body) -->
+  <g transform="translate(250 234)" fill="url(#wingFar)" stroke="#d8c2a2" stroke-width="2" stroke-linejoin="round">
+    <use href="#leaf" transform="rotate(-64) scale(1.55 .95)"/>
+    <use href="#leaf" transform="rotate(-47) scale(1.6 1.1)"/>
+    <use href="#leaf" transform="rotate(-30) scale(1.6 1.14)"/>
+    <use href="#leaf" transform="rotate(-14) scale(1.5 1.08)"/>
+    <use href="#leaf" transform="rotate(2) scale(1.4 .96)"/>
+  </g>
+
+  <!-- tail -->
+  <g transform="translate(440 300)" fill="url(#body)" stroke="#dcc8aa" stroke-width="2" stroke-linejoin="round">
+    <use href="#leaf" transform="rotate(128) scale(.8 .62)"/>
+    <use href="#leaf" transform="rotate(114) scale(.86 .72)"/>
+    <use href="#leaf" transform="rotate(100) scale(.9 .74)"/>
+    <use href="#leaf" transform="rotate(86) scale(.82 .64)"/>
+  </g>
+
+  <!-- body + head -->
+  <path d="M150 203 C176 190 208 196 228 212 C292 204 384 234 458 292 L452 330 C386 354 286 350 226 316 C190 298 160 281 148 263 C124 251 118 214 150 203 Z"
+        fill="url(#body)" stroke="#dcc8aa" stroke-width="2" stroke-linejoin="round"/>
+
+  <!-- neck sheen -->
+  <g opacity=".9">
+    <path d="M178 252 C196 232 226 230 246 244 C238 266 206 276 184 268 Z" fill="#d6c7cf" opacity=".55"/>
+    <path d="M190 252 l22 -10 M196 262 l26 -10 M206 270 l24 -12 M186 244 l18 -8" stroke="#b8a4b0" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+  </g>
+
+  <!-- belly shading -->
+  <path d="M230 316 C290 346 390 344 450 326 C400 336 300 336 238 300 Z" fill="#e8d3b4" opacity=".55"/>
+
+  <!-- beak -->
+  <path d="M130 233 L110 246 C110 251 117 252 126 250 L147 241 Z" fill="#c96442"/>
+  <ellipse cx="136" cy="233" rx="7" ry="5" fill="#fffaf2" stroke="#dcc8aa" stroke-width="1.5" transform="rotate(-20 136 233)"/>
+
+  <!-- eye -->
+  <circle cx="156" cy="224" r="11" fill="#f08a5a"/>
+  <circle cx="156" cy="224" r="6" fill="#2b1d17"/>
+  <circle cx="153.5" cy="221.5" r="2" fill="#fff"/>
+
+  <!-- near wing (front) -->
+  <g transform="translate(292 244)" fill="url(#wingNear)" stroke="#dcc8aa" stroke-width="2" stroke-linejoin="round">
+    <use href="#leaf" transform="rotate(78) scale(1.5 .86)"/>
+    <use href="#leaf" transform="rotate(62) scale(1.6 1.1)"/>
+    <use href="#leaf" transform="rotate(46) scale(1.7 1.28)"/>
+    <use href="#leaf" transform="rotate(30) scale(1.7 1.36)"/>
+    <use href="#leaf" transform="rotate(14) scale(1.6 1.32)"/>
+    <use href="#leaf" transform="rotate(-2) scale(1.5 1.18)"/>
+  </g>
+  <path d="M262 244 C268 196 318 160 392 168 C404 206 366 250 296 264 C280 266 268 258 262 244 Z" fill="#fffdf9" stroke="#dcc8aa" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M290 238 C312 214 346 204 374 204 M300 252 C324 232 352 224 380 226" fill="none" stroke="#e5d2b6" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- envelope -->
+  <g transform="rotate(-9 326 424)">
+    <rect x="262" y="384" width="132" height="92" rx="7" fill="url(#kraft)" stroke="#c39a6c" stroke-width="2.5"/>
+    <path d="M264 388 L328 436 L392 388" fill="#efd3a8" stroke="#c39a6c" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M264 474 L316 428 M392 474 L340 428" fill="none" stroke="#c39a6c" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+    <circle cx="328" cy="436" r="10" fill="#c96442"/>
+    <circle cx="325" cy="433" r="3" fill="#e9987b"/>
+  </g>
+
+  <!-- feet -->
+  <g fill="none" stroke="#c96442" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M300 340 L306 384"/>
+    <path d="M306 384 l-16 8 M306 384 l2 12 M306 384 l16 8"/>
+    <path d="M346 342 L354 386"/>
+    <path d="M354 386 l-16 8 M354 386 l2 12 M354 386 l16 8"/>
+  </g>
+</svg>
