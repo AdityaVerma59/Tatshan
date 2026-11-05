@@ -24,7 +24,7 @@ service cloud.firestore {
       return request.auth != null
         && request.auth.token.firebase.sign_in_provider == 'google.com'
         && request.auth.token.email_verified == true
-        && request.auth.token.email in ['REPLACE-WITH-YOUR-EMAIL@gmail.com'];
+        && request.auth.token.email in ['aadioct30@gmail.com'];
     }
     function boxOwner(boxId) {
       return get(/databases/$(database)/documents/boxes/$(boxId)).data.ownerUid == request.auth.uid;
