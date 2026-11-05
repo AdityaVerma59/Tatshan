@@ -1,0 +1,143 @@
+rules_version = '2';
+
+// Layout:
+//   boxes/{boxId}                  an inbox ("temp", 6 h) or a print shop ("shop", permanent)
+//   boxes/{boxId}/transfers/{id}   one message: sender name + list of files
+//   boxes/{boxId}/parts/{id}       ~700 KB pieces of the files themselves
+//   users/{uid}                    a signed-in print shop owner's profile + settings
+//   users/{uid}/history/{id}       the shop's history log (metadata only, files stay on the device)
+//   visits/{day_uid}               one doc per visitor per day (traffic stats)
+//   events/{tid}                   one doc per transfer (usage stats)
+//   daily/{day}                    admin-only rollups of the above
+//
+// Anyone signed in (anonymous is enough) may SEND into a box if they know its code.
+// Only the box's owner may read. Print shops can only be created by a REAL account
+// (Google or email), never an anonymous one.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function registered() { return request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous'; }
+    // ADMINS: put your Google account's email below (lowercase), then redeploy the rules.
+    // Checked from the sign-in token itself, so it costs no database reads.
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider == 'google.com'
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in ['REPLACE-WITH-YOUR-EMAIL@gmail.com'];
+    }
+    function boxOwner(boxId) {
+      return get(/databases/$(database)/documents/boxes/$(boxId)).data.ownerUid == request.auth.uid;
+    }
+
+    // ───────────── boxes ─────────────
+    match /boxes/{boxId} {
+      allow get: if signedIn();
+      allow list: if isAdmin();                    // only the admin dashboard may count shops
+
+      allow create: if signedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.kind in ['temp', 'shop']
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 40
+        && (
+          (request.resource.data.kind == 'shop' && registered())
+          || (request.resource.data.kind == 'temp'
+              && request.resource.data.expireAt is timestamp
+              && request.resource.data.expireAt <= request.time + duration.value(6, 'h') + duration.value(2, 'm'))
+        );
+      allow delete: if signedIn() && resource.data.ownerUid == request.auth.uid;
+      allow update: if false;
+
+      match /transfers/{tid} {
+        allow read: if signedIn() && (boxOwner(boxId) || resource.data.senderUid == request.auth.uid);
+
+        allow create: if signedIn()
+          && exists(/databases/$(database)/documents/boxes/$(boxId))
+          && request.resource.data.senderUid == request.auth.uid
+          && request.resource.data.senderName is string
+          && request.resource.data.senderName.size() > 0 && request.resource.data.senderName.size() <= 40
+          && request.resource.data.files is list
+          && request.resource.data.files.size() > 0 && request.resource.data.files.size() <= 10
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.keys().hasOnly(['senderUid', 'senderName', 'files', 'createdAt', 'expireAt']);
+
+        allow delete: if signedIn() && (isAdmin() || boxOwner(boxId) || resource.data.senderUid == request.auth.uid);
+        allow update: if false;
+      }
+
+      // File pieces. Only the owner can read them (one at a time, by exact id), only
+      // within 6 hours of upload, so an unpicked file becomes unreadable on its own.
+      match /parts/{partId} {
+        allow get: if signedIn() && boxOwner(boxId)
+          && resource.data.createdAt > request.time - duration.value(6, 'h');
+        allow list: if false;
+
+        allow create: if signedIn()
+          && exists(/databases/$(database)/documents/boxes/$(boxId))
+          && request.resource.data.senderUid == request.auth.uid
+          && request.resource.data.data is bytes
+          && request.resource.data.data.size() <= 760000
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.keys().hasOnly(['tid', 'senderUid', 'data', 'createdAt', 'expireAt']);
+
+        allow delete: if signedIn() && (isAdmin() || boxOwner(boxId) || resource.data.senderUid == request.auth.uid);
+        allow update: if false;
+      }
+    }
+
+    // ───────────── admin: look across every box (collection-group queries) ─────────────
+    match /{path=**}/transfers/{tid} {
+      allow read: if isAdmin();
+    }
+    match /{path=**}/parts/{partId} {
+      allow read: if isAdmin();
+    }
+
+    // ───────────── print-shop accounts ─────────────
+    match /users/{uid} {
+      allow read, write: if registered() && request.auth.uid == uid;
+      match /history/{id} {
+        allow read, write: if registered() && request.auth.uid == uid;
+      }
+    }
+
+    // ───────────── stats ─────────────
+    // One doc per visitor per day. The id is "<day>_<uid>", so a visitor can only ever count once.
+    match /visits/{vid} {
+      allow create: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.day is string
+        && request.resource.data.day.matches('^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$')
+        && vid == request.resource.data.day + '_' + request.auth.uid
+        && request.resource.data.kind in ['anon', 'registered']
+        && request.resource.data.at == request.time
+        && request.resource.data.keys().hasOnly(['uid', 'day', 'kind', 'at', 'expireAt']);
+      allow read: if isAdmin();
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    // One doc per transfer. Written by the sender's browser, so treat as analytics, not accounting.
+    match /events/{eid} {
+      allow create: if signedIn()
+        && request.resource.data.senderUid == request.auth.uid
+        && request.resource.data.day is string
+        && request.resource.data.day.matches('^20[0-9][0-9]-[01][0-9]-[0-3][0-9]$')
+        && request.resource.data.dest in ['temp', 'shop']
+        && request.resource.data.senderType in ['anon', 'registered']
+        && request.resource.data.files is int && request.resource.data.files >= 1 && request.resource.data.files <= 10
+        && request.resource.data.bytes is int && request.resource.data.bytes >= 0 && request.resource.data.bytes <= 110000000
+        && request.resource.data.types is map
+        && request.resource.data.at == request.time
+        && request.resource.data.keys().hasOnly(['senderUid', 'day', 'at', 'dest', 'senderType', 'files', 'bytes', 'types', 'expireAt']);
+      allow read: if isAdmin();
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    match /daily/{day} {
+      allow read, write: if isAdmin();
+    }
+  }
+}
