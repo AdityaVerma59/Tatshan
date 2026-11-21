@@ -445,3 +445,12 @@ h1, h2 { margin: 0; font-weight: 400; }
 .admin-body > *, .kpis > * { min-width: 0; }
 .kpis { grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); }
 .chart-scroll { max-width: 100%; }
+
+/* ── optional sign-in for senders ── */
+.auth-optional { margin-top: 8px; }
+.auth-optional-wrap { padding: 12px 0 4px; }
+.auth-optional-wrap .auth { margin-top: 10px; padding: 16px; background: var(--surface-2); border-radius: 12px; }
+.signed-in-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; font-size: 13.5px; flex-wrap: wrap; }
+.linkish.small { font-size: 13px; padding: 2px; }
+.muted.small { font-size: 13px; display: inline-flex; align-items: center; gap: 5px; }
+.hint.tight { margin: 2px 0 8px; }
