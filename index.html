@@ -1,23 +1,76 @@
+
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Tatshan · तत्क्षण — instant file transfer</title>
-  <meta name="description" content="Send files instantly with a QR code. No phone numbers, no links, no sign-up. Made for print shops too.">
+
+  <!-- Primary SEO -->
+  <title>Tatshan – Instant QR Code File Transfer | No Sign-up</title>
+
+  <meta name="description" content="Tatshan (तत्क्षण) lets you transfer files instantly using a QR code. No phone numbers, no sharing links, and no sign-up required. Perfect for individuals and print shops.">
+
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="googlebot" content="index, follow">
+  <meta name="author" content="Tatshan">
+  <meta name="application-name" content="Tatshan">
   <meta name="theme-color" content="#faf9f5" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#262624" media="(prefers-color-scheme: dark)">
   <meta name="referrer" content="no-referrer">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://tatshan.in/">
+
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Tatshan">
+  <meta property="og:title" content="Tatshan – Instant QR Code File Transfer">
+  <meta property="og:description" content="Transfer files instantly with a QR code. No phone numbers, no links, no sign-up. Simple and secure file sharing with Tatshan.">
+  <meta property="og:url" content="https://tatshan.in/">
+  <meta property="og:locale" content="en_IN">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Tatshan – Instant QR Code File Transfer">
+  <meta name="twitter:description" content="Send files instantly using QR codes. No phone numbers, links, or registration required.">
+
+  <!-- Structured Data: Web Application -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Tatshan",
+    "alternateName": "तत्क्षण",
+    "url": "https://tatshan.in/",
+    "description": "Tatshan is an instant QR code-based file transfer application. Share files without phone numbers, sharing links, or sign-up.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "INR"
+    }
+  }
+  </script>
+
+  <!-- Favicon -->
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/icon-192.png">
   <link rel="manifest" href="manifest.webmanifest">
+
+  <!-- Font Preloading -->
   <link rel="preload" href="fonts/tiro-devanagari.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/tiro-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+  <!-- Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
+
   <div id="demo-banner" class="demo-banner" hidden>
-    Demo mode: files only travel between tabs of this browser. Add your Firebase keys in <code>js/config.js</code> to go live.
+    Demo mode: files only travel between tabs of this browser.
+    Add your Firebase keys in <code>js/config.js</code> to go live.
   </div>
 
   <header class="top wrap">
@@ -25,18 +78,28 @@
       <span class="logo-hi" lang="hi">तत्क्षण</span>
       <span class="logo-en">Tatshan</span>
     </a>
+
     <a class="top-link" href="#/shop">For print shops</a>
   </header>
 
   <main id="app" class="wrap" tabindex="-1">
-    <div class="center pad"><span class="spinner" role="status" aria-label="Loading"></span></div>
+    <div class="center pad">
+      <span class="spinner" role="status" aria-label="Loading"></span>
+    </div>
   </main>
 
   <footer class="foot wrap">
-    <p>Files are deleted the moment they’re downloaded, or after 6 hours.</p>
+    <p>Files are deleted the moment they're downloaded, or after 6 hours.</p>
   </footer>
 
-  <noscript><p class="wrap">Tatshan needs JavaScript to run.</p></noscript>
+  <noscript>
+    <p class="wrap">
+      Tatshan requires JavaScript to transfer files.
+      Enable JavaScript to use instant QR code file sharing.
+    </p>
+  </noscript>
+
   <script type="module" src="js/app.js"></script>
+
 </body>
 </html>
